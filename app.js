@@ -220,3 +220,14 @@ app.post("gameActions", (req, res) => {
     res.send(results);
   });
 });
+
+app.get("/gameActions", (req, res) => {
+  let opponent = req.query.opponent;
+  let timestamp = req.query.timestamp;
+  let sql = `SELECT * FROM actionPerformed WHERE opponent = '${opponent}' AND gameTimestamp = '${timestamp}';`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
