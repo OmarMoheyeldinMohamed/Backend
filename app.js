@@ -201,7 +201,7 @@ app.delete("/gameActions/:opponent/:timestamp", (req, res) => {
   });
 });
 
-app.post("gameDetails", (req, res) => {
+app.post("/gameDetails", (req, res) => {
   let body = req.body;
   let sql = `INSERT INTO game (opponent, timestamp, myScore, theirScore, home, category, startOffence) VALUES ('${body.opponent}', '${body.timestamp}', '${body.myScore}', '${body.theirScore}', '${body.isHome}', '${body.category}', '${body.startOffence}');`;
   let query = db.query(sql, (err, results) => {
@@ -211,10 +211,13 @@ app.post("gameDetails", (req, res) => {
   });
 });
 
-app.post("gameActions", (req, res) => {
+app.post("/gameActions", (req, res) => {
   let body = req.body;
-  let sql = `INSERT INTO actionPerformed (opponent, gameTimestamp, playerName, action, id, point, timestamp, associatedPlayer) VALUES ?;`;
-  let query = db.query(sql, [body.values], (err, results) => {
+  // console.log(body.values);
+  let sql = `INSERT INTO actionPerformed (opponent, gameTimestamp, playerName, action, point, timestamp, associatedPlayer) VALUES ${body.values};`;
+  console.log("SQL", sql);
+
+  let query = db.query(sql, [], (err, results) => {
     if (err) throw err;
     console.log(results);
     res.send(results);
@@ -227,6 +230,7 @@ app.get("/gameActions", (req, res) => {
   let sql = `SELECT * FROM actionPerformed WHERE opponent = '${opponent}' AND gameTimestamp = '${timestamp}';`;
   let query = db.query(sql, (err, results) => {
     if (err) throw err;
+
     console.log(results);
     res.send(results);
   });
