@@ -214,7 +214,7 @@ app.post("/gameDetails", (req, res) => {
 app.post("/gameActions", (req, res) => {
   let body = req.body;
   // console.log(body.values);
-  let sql = `INSERT INTO actionPerformed (opponent, gameTimestamp, playerName, action, point, timestamp, associatedPlayer) VALUES ${body.values};`;
+  let sql = `INSERT INTO actionPerformed (opponent, gameTimestamp, playerName, action, point, associatedPlayer) VALUES ${body.values};`;
   console.log("SQL", sql);
 
   let query = db.query(sql, [], (err, results) => {
