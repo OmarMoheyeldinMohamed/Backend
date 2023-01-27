@@ -242,3 +242,94 @@ app.get("/gameActions", (req, res) => {
     res.send(results);
   });
 });
+
+app.post("/practice", (req, res) => {
+  let date = req.body.date;
+  let players = req.body.players;
+  let sql = `INSERT INTO practice (date) VALUES (?);`;
+  let query = db.query(sql, [date], (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    let id = results.insertId;
+    let values = "";
+    for (let i = 0; i < players.length; i++) {
+      values += `('${id}','${players[i][0]}','${players[i][1] ? 1 : 0}','${
+        players[i][2] ? 1 : 0
+      }')`;
+      if (i !== players.length - 1) {
+        values += ",";
+      }
+    }
+    console.log(values);
+
+    sql = `INSERT INTO playersToCome (practiceId, playerName, isAttending, isExecused) VALUES ${values};`;
+    query = db.query(sql, [], (err, results2) => {
+      if (err) throw err;
+      console.log(results2);
+      res.send(results);
+    });
+
+    // res.send(results);
+  });
+});
+
+app.post("/practicePlayers", (req, res) => {
+  let body = req.body;
+  let values = body.values;
+  let sql = `INSERT INTO playersToCome (practiceId, playerName, isAttending, isExecused) VALUES ${values};`;
+  let query = db.query(sql, [], (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.delete("/practice", (req, res) => {
+  let id = req.body.id;
+  let sql = `DELETE FROM practice WHERE id = ${id};`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.delete("/practicePlayers", (req, res) => {
+  let id = req.body.id;
+  let sql = `DELETE FROM playersToCome WHERE practiceID = ${id};`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.put("/practice", (req, res) => {
+  let body = req.body;
+  let id = body.id;
+  let update = body.update;
+  let sql = `UPDATE practice SET lastUpdate = ? WHERE id = ?;`;
+  let query = db.query(sql, [update, id], (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.get("/practice", (req, res) => {
+  let sql = `SELECT * FROM practice;`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.get("/practicePlayers", (req, res) => {
+  let sql = `SELECT * FROM playersToCome;`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
