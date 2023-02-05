@@ -424,3 +424,93 @@ app.get("/trackPlayers", (req, res) => {
     res.send(results);
   });
 });
+
+app.post("/treasury", (req, res) => {
+  let name = req.body.name;
+  let players = req.body.players;
+  // console.log(players);
+  let amount = req.body.amount;
+  let sql = `INSERT INTO treasury (name) VALUES (?);`;
+  let query = db.query(sql, [name], (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    let id = results.insertId;
+    let values = "";
+    for (let i = 0; i < players.length; i++) {
+      values += `('${id}','${players[i]}','${amount}')`;
+      if (i !== players.length - 1) {
+        values += ",";
+      }
+    }
+    console.log(values);
+
+    sql = `INSERT INTO treasuryEntry (treasuryId, playerName, amountOwed) VALUES ${values};`;
+    query = db.query(sql, [], (err, results2) => {
+      if (err) throw err;
+      console.log(results2);
+      res.send(results);
+    });
+
+    // res.send(results);
+  });
+});
+app.get("/treasury", (req, res) => {
+  let sql = `SELECT * FROM treasury;`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.get("/treasuryPlayers", (req, res) => {
+  let sql = `SELECT * FROM treasuryEntry;`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.delete("/treasury", (req, res) => {
+  let id = req.body.id;
+  let sql = `DELETE FROM treasury WHERE id = ${id};`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.delete("/treasuryPlayers", (req, res) => {
+  let id = req.body.id;
+  let sql = `DELETE FROM treasuryEntry WHERE treasuryId = ${id};`;
+  let query = db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.post("/treasuryPlayers", (req, res) => {
+  let body = req.body;
+  let values = body.values;
+  let sql = `INSERT INTO treasuryEntry (treasuryId, playerName, amountOwed, amountPaid) VALUES ${values};`;
+  let query = db.query(sql, [], (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
+
+app.put("/treasury", (req, res) => {
+  let body = req.body;
+  let id = body.id;
+  let update = body.update;
+  let sql = `UPDATE treasury SET lastUpdate = ? WHERE id = ?;`;
+  let query = db.query(sql, [update, id], (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.send(results);
+  });
+});
