@@ -1,8 +1,12 @@
-const mysql = require("mysql");
 const express = require("express");
+const mysql = require("mysql");
 const app = express();
-const morgan = require("morgan");
-const port = 3000;
+
+// const mysql = require("mysql");
+// const express = require("express");
+// const app = express();
+// const morgan = require("morgan");
+// const port = 3000;
 
 const bodyParser = require("body-parser");
 
@@ -35,25 +39,25 @@ db.connect((err) => {
 });
 // rnd_MNRe6kjnEeHPQG8eorFxBzsv23D7
 
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
-  );
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
+//   );
+//   next();
+// });
 
 // This adds the logger.
-app.use(morgan(":method :url :status - :response-time ms"));
+// app.use(morgan(":method :url :status - :response-time ms"));
 
-const server = require("http").createServer(app);
+// const server = require("http").createServer(app);
 
-server.listen(port, () => {
-  console.log("listening on *:3000");
-});
+// server.listen(port, () => {
+//   console.log("listening on *:3000");
+// });
 
 //query to database
 app.get("/players", (req, res) => {
@@ -513,4 +517,8 @@ app.put("/treasury", (req, res) => {
     console.log(results);
     res.send(results);
   });
+});
+
+app.listen("3000", () => {
+  console.log("Server is successfully running on port 3000");
 });
